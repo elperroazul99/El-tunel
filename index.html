@@ -1,47 +1,161 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Menú del Día - Mi Restaurante</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Bar Café DEMESA</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#f4f4f4; color:#333; }
+
+    /* Encabezado con imagen y nombre */
+    header {
+      position: relative;
+      height: 400px;
+      background: url('imagen-superior.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+    }
+    header::after {
+      content:"";
+      position:absolute;
+      bottom:0; left:0; right:0;
+      height:100px;
+      background: linear-gradient(to bottom, transparent, #f4f4f4);
+    }
+    header h1 {
+      position: relative;
+      z-index: 2;
+      font-size: 3em;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+      margin:0;
+    }
+    header p {
+      position: relative;
+      z-index: 2;
+      font-size: 1.2em;
+      margin-top: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    /* Botón menú hamburguesa */
+    .menu-icon {
+      position: absolute;
+      top: 20px; left: 20px;
+      cursor: pointer;
+      z-index: 1000; /* siempre visible */
+    }
+    .menu-icon div {
+      width: 30px; height: 4px;
+      background: #fff; margin: 6px 0;
+    }
+
+    /* Menú lateral */
+    .side-menu {
+      position: fixed;
+      top:0; left:-300px;
+      width:250px; height:100%;
+      background: rgba(34,34,34,0.85); /* semi-transparente */
+      color:#fff;
+      padding:20px;
+      transition: left 0.3s ease;
+      z-index: 999; /* encima del header */
+
+      /* efecto difuminado en el borde derecho */
+      box-shadow: 10px 0 20px rgba(0,0,0,0.5);
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 95%, rgba(0,0,0,0));
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+    }
+    .side-menu h3 { 
+      margin-top: 60px; /* mueve la palabra Menú más abajo */
+      border-bottom:1px solid #444; 
+      padding-bottom:10px; 
+    }
+    .side-menu p { margin:10px 0; }
+
+    /* Carrusel */
+    .carrusel { display:flex; overflow-x:auto; scroll-behavior:smooth; margin:20px; }
+    .carrusel img { width:300px; margin:10px; border-radius:10px; }
+
+    /* Ofertas en columna */
+    .ofertas { margin:40px; }
+    .oferta {
+      background:#fff; padding:30px; border-radius:10px;
+      box-shadow:0 2px 5px rgba(0,0,0,0.2); margin-bottom:20px;
+      text-align:center;
+    }
+
+    /* Pie de página */
+    footer { background:#222; color:#fff; text-align:center; padding:20px; }
+    footer a { margin:0 10px; color:#fff; text-decoration:none; }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>🍴 Menú del Día</h1>
-    <a href="carrito.html" class="cart-button" title="Ver carrito">🛒</a>
+    <div class="menu-icon" onclick="toggleMenu()">
+      <div></div><div></div><div></div>
+    </div>
+    <h1>Bar Café DEMESA</h1>
+    <p id="frase-dia"></p>
   </header>
 
-  <div class="menu-container">
-    <!-- El menú se carga dinámicamente desde script.js -->
+  <div class="side-menu" id="sideMenu">
+    <h3>Menú</h3>
+    <p>Platos fríos</p>
+    <p>Platos calientes</p>
+    <p>Postres</p>
   </div>
 
-  <!-- Panel de administración oculto -->
-  <div id="admin-panel" style="display: none;">
-    <h2>🔧 Administrar Menú</h2>
-    <input type="text" id="new-name" placeholder="Nombre del plato" />
-    <input type="text" id="new-desc" placeholder="Descripción" />
-    <input type="number" id="new-price" placeholder="Precio" />
-    <input type="text" id="new-img" placeholder="URL de imagen (ej: img/ropa-vieja.jpg)" />
-    <button onclick="addNewProduct()">Agregar al menú</button>
+  <section class="carrusel">
+    <img src="interior.jpg" alt="interior">
+    <img src="portal.jpg" alt="portal">
+    <img src="pisarra.jpg" alt="pisarra">
+  </section>
 
-    <h3>Eliminar platos</h3>
-    <ul id="delete-list"></ul>
-  </div>
-
-  <!-- Botón flotante para abrir el panel (oculto por defecto) -->
-  <button id="admin-toggle" title="Administrar menú">⚙️</button>
-
-  <!-- Campo para ingresar el código secreto -->
-  <div id="unlock-panel" style="text-align: center; margin: 2rem;">
-    <input type="password" id="admin-code" placeholder="Código de acceso" style="padding: 0.5rem; font-size: 1rem;" />
-    <button onclick="verificarCodigo()" style="padding: 0.5rem 1rem;">Entrar</button>
-  </div>
+  <section class="ofertas">
+    <div class="oferta"><h3>Bebidas</h3><p></p>Cervezas Refrescos Batidos</div>
+    <div class="oferta"><h3>Infuciones</h3><p>Café Té</p></div>
+    <div class="oferta"><h3>Emparedados</h3><p>Hamburguesas Sandwitchs tapas</p></div>
+    <div class="oferta"><h3>Postres</h3><p>Donas</p></div>
+  </section>
 
   <footer>
-    Disponible solo hoy | Pedidos al 📞 535-555-5555
+    <p>Contacto: restaurante@ejemplo.com</p>
+    <a href="#">Facebook</a>
+    <a href="#">Instagram</a>
+    <a href="#">WhatsApp</a>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      if (menu.style.left === "0px") {
+        menu.style.left = "-300px"; // se esconde completamente
+      } else {
+        menu.style.left = "0px"; // aparece desde la izquierda
+      }
+    }
+
+    // Frases que cambian cada día
+    const frases = [
+      "La magia está en cada sorbo.",
+      "Sabores que cuentan historias.",
+      "Innovación servida en tu mesa.",
+      "Un viaje sensorial en cada plato.",
+      "Donde la ciencia se mezcla con el arte.",
+      "Tu momento especial empieza aquí.",
+      "Explora lo inesperado en cada bocado."
+    ];
+
+    // Selección según el día
+    const hoy = new Date();
+    const indice = hoy.getDate() % frases.length; 
+    document.getElementById("frase-dia").textContent = frases[indice];
+  </script>
+
 </body>
 </html>
